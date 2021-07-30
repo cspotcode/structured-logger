@@ -43,4 +43,10 @@ const rootLogger = createBlankLogger().settings({
 const logger = rootLogger.clone({
   requestId: request.id
 });
+
+// .log(), .info(), .error() imply setting a severity field and writing to stdout
+// If you want the JSON object without sending it anywhere
+logger.build()
+logger.buildInfo()
+logger.buildError()
 ```
