@@ -1,4 +1,4 @@
-TypeScript structured logger, focused on the structured bit and not so much on all the other stuff like transports and formatting and whatnot.  Has the tools you need to log JSON messages about things happening in parallel bound to specific context, such as request and account IDs.
+Ideas for a TypeScript structured logger, focused on the structured bit and not so much on all the other stuff like transports and formatting and whatnot.  Has the tools you need to log JSON messages about things happening in parallel bound to specific context, such as request and account IDs.
 
 ```typescript
 logger.set({
