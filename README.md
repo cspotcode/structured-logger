@@ -67,7 +67,7 @@ can tracing be as simple as calling `.trace()` on a logger; `.trace()` calls are
 
 wrap fields in context object?  Or use flat JSON object?  How does Sumo / DD do it?
 
-Worth it to allow pairing a message with field types?  something like `const message = logMessage<{duration: number}>(\`Took too long, took {duration} seconds\`);`
+Worth it to allow pairing a message with field types?  something like <code>const message = logMessage<{duration: number}>(`Took too long, took {duration} seconds`);</code>
 
 ### Next steps
 
