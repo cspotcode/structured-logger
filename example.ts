@@ -1,6 +1,7 @@
 import {createLogger} from './index';
 
 const rootLogger = createLogger().declare<{
+    /** Docs for user_id */
     user_id: string;
     account_id: string;
     application: string;
@@ -60,6 +61,13 @@ b.message('Adding {first} {last} to the {accountId} for {action}').set({
     action: 'foobar'
 });
 
+logger.set({
+    user_id: '',
+    requestId: '',
+}).add({
+    another: true,
+    also: ''
+});
 logger.add({added: true}).log('{inmessage}', {
   other: true,
   other2: true,

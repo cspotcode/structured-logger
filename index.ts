@@ -1,5 +1,7 @@
+type DefaultTemplateFieldType = string | number | boolean;
+
 /** Like Record<> but the keys are parsed from a literal string, delimited by {} */
-export type TemplateFields<T extends string> = Record<TemplateFieldNamesInternal<T, never>, string | number | boolean>;
+export type TemplateFields<T extends string> = Record<TemplateFieldNamesInternal<T, never>, DefaultTemplateFieldType>;
 /** Extract a union of {}-delimited field names from a string*/
 export type TemplateFieldNames<T extends string> = TemplateFieldNamesInternal<T, never>;
 type TemplateFieldNamesInternal<T extends string, Names> =
@@ -27,7 +29,7 @@ export type ProposeTemplateFields<T extends string, SuggestedPropertyName extend
 
 export type ProposeObjectProperties<PassedObject extends object, DeclaredFields, TemplateFields extends string> =
   [PassedObject] extends [never] ? PassedObject :
-    Partial<Record<keyof DeclaredFields | TemplateFields, unknown>> & {[K: string]: unknown}
+    Partial<DeclaredFields> & Partial<Record<TemplateFields, DefaultTemplateFieldType>> & {[K: string]: unknown}
 
 /** A structured logger, or a tracing span, depending how you want to think about it. */
 interface Logger<Fields> {
@@ -170,11 +172,16 @@ export class LoggerImpl<Fields> {
      * Create and emit a log event.
      */
     log(): void;
+    log(
+        fields: Partial<Fields> & {[key: string]: unknown}
+    ): void;
     log<M extends string, PassedFields extends object>(
         message: ProposeTemplateFields<M, (keyof Fields | keyof PassedFields) & string>,
         fields: ProposeObjectProperties<PassedFields, Fields, TemplateFieldNames<M>>
     ): void;
-    log(message: string = this._message, fields?: object) {
+    log(messageOrFieldsOrNothing?: string | object, fieldsOrNothing?: object) {
+      const message = typeof messageOrFieldsOrNothing === 'string' ? messageOrFieldsOrNothing : this._message;
+      const fields = typeof messageOrFieldsOrNothing === 'string' ? fieldsOrNothing : messageOrFieldsOrNothing;
       const event = this.getMergedFields(fields);
       const fullMessage = this.getFullMessage(message);
       event.message = renderMessage(fullMessage, event);
