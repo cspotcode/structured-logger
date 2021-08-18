@@ -191,11 +191,11 @@ export class LoggerSpan<Fields> {
       this._eventEnrichers.push(enricher);
     }
 
-    isFinished() {
+    isEnded() {
       return this._finished;
     }
 
-    finish() {
+    end() {
       if(this._finished) throw new Error('cannot finish a span that already finished');
       this._finished = true;
       // Cannot call `.tag()` here, because when we're inside the class, the typechecker doesn't know how narrow `Fields`
