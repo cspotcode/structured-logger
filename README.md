@@ -18,8 +18,11 @@ logger.prefix(''); // like message but bind a message prefix, so .message() will
 
 // TODO how to allow both mutating a logger instance you already have, and creating child instances?
 .set() mutates
+.add() adds new fields; throws if any are already set.  Use to avoid accidental overwrites
 .child() creates a sub-logger
 .child({jobId}) to create a sub-logger bound to a job ID so you can log a bunch of stuff happening in parallel
+.child('jobUpdate', {jobId}) to create a sub-logger where fields go onto a sub-context object
+.child().prefix('Updating {jobId}: ', {jobId})
 
 logger.declare<>(); // Declare fields in the type system to be bound later, without any runtime behavior.
 // Can be useful to create suggested naming conventions at the root of a project, which will tab-complete when using the logger elsewhere
@@ -57,11 +60,18 @@ logger.buildError()
 logger.enrich(log => {
   log.timestamp = +new Date,
 });
+
+// Encapsulate hard-coded fields alongside a message, then reuse it in logging.
+const message = createMessage({code: 'JOB_RELATED_MESSAGE'}, 'message about {job_id}');
+logger.log(message, {job_id: 123});
 ```
 
 ### Questions
 
 tracing: how to group trace events, how to determine if tracing is enabled for a given log message / trace?
+
+Every child logger is a tracing span()
+Every logged message is an "event" within the span
 
 can tracing be as simple as calling `.trace()` on a logger; `.trace()` calls are filtered / grouped based on set logger values: `userId`, `accountId`, `requestId`, etc.
 
