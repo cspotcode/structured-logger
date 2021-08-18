@@ -20,3 +20,19 @@ queries.
 Add `.tagNonInherited` to set tags that are *not* inherited by child spans?
 
 Add `.fail()` to mark a span failed with an error
+
+Emit to stdout using configurable schema:
+
+OpenTelemetry log message standard:
+https://github.com/open-telemetry/opentelemetry-specification/blob/2e7d017f26ab06b576229b1f1471063837b39fe8/specification/logs/data-model.md#field-body
+
+Or consider this simpler one:
+```
+{
+  "caller":"foo-service/index.ts:10",
+  "level":"info",
+  "msg":"Human readable message",
+  "service":"foo-service",
+  "ts":"2021-08-18T18:47:11.15534892Z"
+}
+```
