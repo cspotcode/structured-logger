@@ -89,6 +89,8 @@ logger.message(message, {
 
 Define MVP: enable logging of today, ready for tracing of tomorrow
 
+Add typedocs for semantic conventions https://opentracing.io/specification/conventions/
+
 ---
 
 Playground where I was experimenting with getting the types right.
