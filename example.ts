@@ -1,4 +1,4 @@
-import {createLogger} from './index';
+import {createLogger, spanEnricher, timestampEnricher} from './index';
 
 const rootLogger = createLogger().declare<{
     /** Docs for user_id */
@@ -7,6 +7,8 @@ const rootLogger = createLogger().declare<{
     application: string;
     requestId: string;
 }>();
+rootLogger.addEventEnricher(timestampEnricher);
+rootLogger.addSpanEnricher(spanEnricher);
 
 function handleRequest(requestId: string, apiBody: {jobIds: string[]}) {
     const logger = rootLogger.child({requestId});
@@ -47,7 +49,7 @@ function handleRequest(requestId: string, apiBody: {jobIds: string[]}) {
 }
 
 const logger = rootLogger.child();
-const a = logger.message('Hello {first} {last}!  Dont forget to {action}').set({
+const a = logger.message('Hello {first} {last}!  Dont forget to {action}').tag({
     first: 'Andrew',
     last: 'Bradley'
 });
@@ -61,16 +63,15 @@ b.message('Adding {first} {last} to the {accountId} for {action}').set({
     action: 'foobar'
 });
 
-logger.set({
+logger.tag({
     user_id: '',
     requestId: '',
-}).add({
+    /** docs */
     another: true,
-    also: ''
+}).tag({
+    a
 });
-logger.add({added: true}).log('{inmessage}', {
-  other: true,
-  other2: true,
-  added: true,
-  inmessage: 'foo'
+logger.tag({added: true}).log('{inmessage}', {
+    inmessage: 'yes',
+    added: false,
 });
